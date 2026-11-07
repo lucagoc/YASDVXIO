@@ -48,18 +48,9 @@
 SDVXHID_ SDVXHID;
 
 #define REACTIVE_FALLBACK ((millis()-SDVXHID.getLastHidUpdate()) > 3000)
-
-#ifdef USE_ENCODERS
 uint8_t LightPins[] = {LED_START,LED_A,LED_B,LED_C,LED_D,LED_FXL,LED_FXR};
 uint8_t ButtonPins[] = {START,BT_A,BT_B,BT_C,BT_D,FX_L,FX_R};
-#else
-/* Buttons + Lights declarations */
-uint8_t LightPins[] = {7,10,11,12,13,8,9};
-//start a b c d fx-l fx-r service test
-uint8_t ButtonPins[] = {0,3,4,5,6,1,2,A3,A2};
-uint8_t PotPins[] = {A5,A4};
-const byte PotCount = sizeof(PotPins) / sizeof(PotPins[0]);
-#endif
+
 //uint8_t RGBPins[] = {LED_STRIP_PIN_L,LED_STRIP_PIN_R}; //must be changed in SDVXHID.h
 
 CRGB left_leds[LEFT_NUM_LEDS]; //will be twice as big as SIDE_NUM_LEDS for single strip variant
@@ -73,7 +64,6 @@ const byte ButtonCount = sizeof(ButtonPins) / sizeof(ButtonPins[0]);
 const byte LightCount = sizeof(LightPins) / sizeof(LightPins[0]);
 Bounce buttons[ButtonCount];
 
-#ifdef USE_ENCODERS
 int32_t g_raw_encL = 0;
 int32_t g_raw_encR = 0;
 
@@ -92,7 +82,6 @@ void doEncR(){
     g_raw_encR--;
   }
 }
-#endif
 
 /* Display animation on the cab according to a bitfield array */
 void animate(uint16_t* tab, uint8_t n, int mswait) {
@@ -117,15 +106,13 @@ void setup() {
   }
 
   /**/
-  #ifdef USE_ENCODERS
-//setup interrupts
+//setup interrupts for encoders
   pinMode(ENC_L_A,INPUT_PULLUP);
   pinMode(ENC_L_B,INPUT_PULLUP);
   pinMode(ENC_R_A,INPUT_PULLUP);
   pinMode(ENC_R_B,INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(ENC_L_A), doEncL, RISING);
   attachInterrupt(digitalPinToInterrupt(ENC_R_A), doEncR, RISING);
-  #endif
   
   uint8_t lightMode;
   EEPROM.get(0, lightMode);
@@ -157,7 +144,6 @@ void loop() {
   int32_t encL = 0;
   int32_t encR = 0;
 
-#ifdef USE_ENCODERS
 // Limit the encoder from 0 to ENCODER_PPR
     if (g_raw_encL >= ENCODER_PPR) {
         g_raw_encL = 1;
@@ -173,10 +159,6 @@ void loop() {
     
   encL = g_raw_encL * ENCODER_SENSITIVITY;
   encR = g_raw_encR * ENCODER_SENSITIVITY;
-#else
-  encL = analogRead(PotPins[0]);
-  encR = analogRead(PotPins[1]);
-#endif
 
   for (int i = 0; i < ButtonCount; i++) {
        buttons[i].update();
