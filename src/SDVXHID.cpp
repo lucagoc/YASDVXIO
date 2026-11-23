@@ -1,11 +1,13 @@
 #include "SDVXHID.h"
 
 byte extern LightPins[];
-CRGB extern left_leds[LEFT_NUM_LEDS];
 #ifdef SINGLE_STRIP
-CRGB extern *right_leds;
+extern CRGB strip_leds[LEFT_NUM_LEDS];
+extern CRGB *left_leds;
+extern CRGB *right_leds;
 #else
-CRGB extern right_leds[SIDE_NUM_LEDS];
+extern CRGB left_leds[LEFT_NUM_LEDS];
+extern CRGB right_leds[SIDE_NUM_LEDS];
 #endif
 
 /* HID DESCRIPTOR */
@@ -156,7 +158,7 @@ static const byte PROGMEM _hidReportSDVX[] = {
 
     void SDVXHID_::initRGB(){
       #ifdef SINGLE_STRIP
-      FastLED.addLeds<WS2812, LED_STRIP_PIN_L, GRB>(left_leds, LEFT_NUM_LEDS);
+      FastLED.addLeds<APA102, LED_STRIP_DATA_PIN, LED_STRIP_CLOCK_PIN, BGR>(strip_leds, LEFT_NUM_LEDS);
       #else
       FastLED.addLeds<WS2812, LED_STRIP_PIN_L, GRB>(left_leds, SIDE_NUM_LEDS);
       FastLED.addLeds<WS2812, LED_STRIP_PIN_R, GRB>(right_leds, SIDE_NUM_LEDS);

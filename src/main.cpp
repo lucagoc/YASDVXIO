@@ -53,10 +53,12 @@ uint8_t ButtonPins[] = {START,BT_A,BT_B,BT_C,BT_D,FX_L,FX_R};
 
 //uint8_t RGBPins[] = {LED_STRIP_PIN_L,LED_STRIP_PIN_R}; //must be changed in SDVXHID.h
 
-CRGB left_leds[LEFT_NUM_LEDS]; //will be twice as big as SIDE_NUM_LEDS for single strip variant
 #ifdef SINGLE_STRIP
-CRGB *right_leds = &(left_leds[SIDE_NUM_LEDS]);
+CRGB strip_leds[LEFT_NUM_LEDS];
+CRGB *right_leds = &strip_leds[0];
+CRGB *left_leds  = &strip_leds[SIDE_NUM_LEDS];
 #else
+CRGB left_leds[SIDE_NUM_LEDS];
 CRGB right_leds[SIDE_NUM_LEDS];
 #endif
 

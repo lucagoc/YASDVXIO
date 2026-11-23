@@ -2,15 +2,18 @@
 #include <FastLED.h>
 
 /* PINOUT */
-//PIN_L is also the pin for single strip use
 #define LED_STRIP_PIN_L 13
 #define LED_STRIP_PIN_R A5
-#define SIDE_NUM_LEDS    9
+
+#define LED_STRIP_DATA_PIN  16
+#define LED_STRIP_CLOCK_PIN 15
+
+#define SIDE_NUM_LEDS    10
 //#define L_STRIP_REVERSE //will reverse the direction of the left strip (for light march effects)
 //#define R_STRIP_REVERSE //will reverse the direction of the right strip (for light march effects)
 
 /* to use a single led strip (in this case SIDE_NUM_LEDS is the number of leds for EACH side */
-//#define SINGLE_STRIP
+#define SINGLE_STRIP
 
 #ifdef SINGLE_STRIP
   #define LEFT_NUM_LEDS    SIDE_NUM_LEDS*2
